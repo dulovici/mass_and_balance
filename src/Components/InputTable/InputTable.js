@@ -16,7 +16,30 @@ const startValues = {
 
     bag1W:0,
     bag1A:64,
-    bag1M:0
+    bag1M:0,
+
+    bag2W:0,
+    bag2A:84,
+    bag2M:0,
+
+    rGal:0,
+    rRate:6,
+    rampW:0,
+    rampA:42,
+    rampM:0,
+
+    gGal:0,
+    gRate:6,
+    groundW:0,
+    groundA:42,
+    groundM:0,
+
+    bGal:0,
+    bRate:6,
+    burnedW:0,
+    burnedA:46,
+    burnedM:0
+
 }
 
 function InputTable() {
@@ -30,10 +53,23 @@ function InputTable() {
         w: values.emptyW + values.pil1W + values.pil2W,
         m: values.emptyM + values.pil1M + values.pil2M
     }
+    const noFuelCond = {
+        w: basicCond.w + values.bag1W + values.bag2W,
+        m: basicCond.m + values.bag1M + values.bag2M
+    }
+    const rampCond = {
+        w: noFuelCond.w + values.rampW,
+        m: noFuelCond.m + values.rampM
+    }
+    const toCond = {
+        w: rampCond.w - values.groundW,
+        m: rampCond.m - values.groundM
+    }
+    const landCond = {
+        w: toCond.w - values.burnedW,
+        m: toCond.m - values.burnedM
+    }
     
-    console.log(basicCond.w)
-
-    console.log(values)
 
     return (
         <div className='input-table'>
@@ -70,9 +106,9 @@ function InputTable() {
                     </tr>
                     <tr>
                         <td className="tg-llyw">Basic Condition</td>
-                        <td className="tg-34fe">{basicCond.w}</td>
-                        <td className="tg-34fe">{(basicCond.m / basicCond.w).toFixed(2)}</td>
-                        <td className="tg-34fe">{basicCond.m}</td>
+                        <td className="tg-34fe">{+basicCond.w.toFixed(2)}</td>
+                        <td className="tg-34fe">{+(basicCond.m / basicCond.w).toFixed(2)}</td>
+                        <td className="tg-34fe">{+basicCond.m.toFixed(2)}</td>
                     </tr>
                     <tr>
                         <td className="tg-0pky">Baggage Area 1</td>
@@ -83,69 +119,91 @@ function InputTable() {
                     </tr>
                     <tr>
                         <td className="tg-0pky">Baggage Area 2</td>
-                        <td className="tg-c3ow"><input type='number' min='0'/></td>
-                        <td className="tg-c3ow"><input type='number' min='0' defaultValue = {84}/></td>
-                        <td className="tg-c3ow">{0}</td>
+                        <td className="tg-c3ow"><input type='number' min='0' value={values.bag2W} onClick={handleClick} onChange={(e)=>
+                            setValues((prev)=>({...prev, bag2W: +e.target.value, bag2M: +e.target.value * values.bag2A}))}/></td>
+                        <td className="tg-c3ow"><input type='number' min='0' defaultValue = {values.bag2A}/></td>
+                        <td className="tg-c3ow">{+values.bag2M.toFixed(2)}</td>
                     </tr>
                     <tr>
                         <td className="tg-llyw">Zero Fuel Condition</td>
-                        <td className="tg-34fe">{0}</td>
-                        <td className="tg-34fe"></td>
-                        <td className="tg-34fe">{0}</td>
+                        <td className="tg-34fe">{+noFuelCond.w.toFixed(2)}</td>
+                        <td className="tg-34fe">{+(noFuelCond.m / noFuelCond.w).toFixed(2)}</td>
+                        <td className="tg-34fe">{+noFuelCond.m.toFixed(2)}</td>
                     </tr>
                     <tr>
                         <td className="tg-0pky">Fuel Load</td>
                         <td className="tg-c3ow multiply">
-                            <input type='number' min='0' style={{width: "50px"}} defaultValue = {0}/>
+                            <input type='number' min='0' value={values.rGal} onClick={handleClick} 
+                                onChange={(e) => {
+                                    setValues((prev)=>({...prev, 
+                                        rGal: +e.target.value,
+                                        rampW: +e.target.value * values.rRate}))
+                                    setValues((prev)=>({...prev,
+                                        rampM: prev.rampW * prev.rampA}))}
+                                }/>
                             <div>x</div>
-                            <input type='number' min='0' style={{width: "50px"}} defaultValue = {6}/>
+                            <input type='number' min='0'  value = {values.rRate} />
                             <div>=</div>
-                            <input type='number' min='0' style={{width: "50px"}} defaultValue = {0}/>
+                            <input type='number' min='0'  value={values.rampW}/>
                         </td>
-                        <td className="tg-c3ow"><input type='number' min='0'  defaultValue = {42}/></td>
-                        <td className="tg-c3ow">{0}</td>
+                        <td className="tg-c3ow"><input type='number' min='0'  value = {values.rampA}/></td>
+                        <td className="tg-c3ow">{+values.rampM.toFixed(2)}</td>
                     </tr>
                     <tr>
                         <td className="tg-llyw">Ramp Condition</td>
-                        <td className="tg-34fe">{0}</td>
-                        <td className="tg-34fe"></td>
-                        <td className="tg-34fe">{0}</td>
+                        <td className="tg-34fe">{+rampCond.w.toFixed(2)}</td>
+                        <td className="tg-34fe">{+(rampCond.m / rampCond.w).toFixed(2)}</td>
+                        <td className="tg-34fe">{+rampCond.m.toFixed(2)}</td>
                     </tr>
                     <tr>
                         <td className="tg-0pky">Fuel Burned On Ground(-)</td>
                         <td className="tg-c3ow multiply">
-                        <input type='number' min='0' style={{width: "50px"}} defaultValue = {0}/>
+                        <input type='number' min='0' value={values.gGal} onClick={handleClick} 
+                        onChange={(e) => {
+                            setValues((prev)=>({...prev, 
+                                gGal: +e.target.value,
+                                groundW: +e.target.value * values.gRate}))
+                            setValues((prev)=>({...prev,
+                                groundM: prev.groundW * prev.groundA}))}
+                        }/>
                             <div>x</div>
-                            <input type='number' min='0' style={{width: "50px"}} defaultValue = {6}/>
+                            <input type='number' min='0' value = {values.gRate}/>
                             <div>=</div>
-                            <input type='number' min='0' style={{width: "50px"}} defaultValue = {0}/>
+                            <input type='number' min='0' value={values.groundW}/>
                         </td>
-                        <td className="tg-c3ow"><input type='number' min='0' defaultValue = {42}/></td>
-                        <td className="tg-c3ow">{0}</td>
+                        <td className="tg-c3ow"><input type='number' min='0' value = {values.groundA}/></td>
+                        <td className="tg-c3ow">{+values.groundM.toFixed(2)}</td>
                     </tr>
                     <tr className='to-cond'>
                         <td className="tg-llyw">TakeOff Condition</td>
-                        <td className="tg-34fe">{0}</td>
-                        <td className="tg-34fe"></td>
-                        <td className="tg-34fe">{0}</td>
+                        <td className="tg-34fe">{+toCond.w.toFixed(2)}</td>
+                        <td className="tg-34fe">{+(toCond.m / toCond.m).toFixed(2)}</td>
+                        <td className="tg-34fe">{+toCond.m.toFixed(2)}</td>
                     </tr>
                     <tr>
                         <td className="tg-0pky">Fuel Burned During Flight(-)</td>
                         <td className="tg-c3ow multiply">
-                        <input type='number' min='0' style={{width: "50px"}} defaultValue = {0}/>
+                        <input type='number' min='0' value={values.bGal} onClick={handleClick} 
+                        onChange={(e) => {
+                            setValues((prev)=>({...prev, 
+                                bGal: +e.target.value,
+                                burnedW: +e.target.value * values.bRate}))
+                            setValues((prev)=>({...prev,
+                                burnedM: prev.burnedW * prev.burnedA}))}
+                        }/>
                             <div>x</div>
-                            <input type='number' min='0' style={{width: "50px"}} defaultValue = {6}/>
+                            <input type='number' min='0' value = {values.bRate}/>
                             <div>=</div>
-                            <input type='number' min='0' style={{width: "50px"}} defaultValue = {0}/>
+                            <input type='number' min='0' value={values.burnedW}/>
                         </td>
-                        <td className="tg-c3ow"><input type='number' min='0' defaultValue = {46}/></td>
-                        <td className="tg-c3ow">{0}</td>
+                        <td className="tg-c3ow"><input type='number' min='0' value = {values.burnedA}/></td>
+                        <td className="tg-c3ow">{values.burnedM}</td>
                     </tr>
                     <tr className='landing-cond'>
                         <td className="tg-llyw">Landing Condition</td>
-                        <td className="tg-34fe">{0}</td>
-                        <td className="tg-34fe"></td>
-                        <td className="tg-34fe">{0}</td>
+                        <td className="tg-34fe">{+landCond.w.toFixed(2)}</td>
+                        <td className="tg-34fe">{+(landCond.m / landCond.w).toFixed(2)}</td>
+                        <td className="tg-34fe">{+landCond.m.toFixed(2)}</td>
                     </tr>
                 </tbody>
             </table>
