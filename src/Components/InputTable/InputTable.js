@@ -1,4 +1,4 @@
-import React ,{useState} from 'react';
+import React ,{useState, useEffect} from 'react';
 import './InputTable.scss';
 
 const startValues = {
@@ -42,8 +42,11 @@ const startValues = {
 
 }
 
-function InputTable() {
-    const [values,setValues] = useState(startValues)
+function InputTable({takeOff, landing, setTakeOff, setLanding}) {
+    
+    const [values,setValues] = useState(startValues);
+
+
 
     const handleClick = (e) => {
         e.target.select();
@@ -61,14 +64,34 @@ function InputTable() {
         w: noFuelCond.w + values.rampW,
         m: noFuelCond.m + values.rampM
     }
-    const toCond = {
+    const takeOfCond = {
         w: rampCond.w - values.groundW,
-        m: rampCond.m - values.groundM
+        m: rampCond.m - values.groundM,
+        
     }
     const landCond = {
-        w: toCond.w - values.burnedW,
-        m: toCond.m - values.burnedM
+        w: takeOfCond.w - values.burnedW,
+        m: takeOfCond.m - values.burnedM
     }
+
+    useEffect(()=>{
+        setTakeOff(
+            {...takeOff,
+                weight: takeOfCond.w,
+                arm: takeOfCond.m / takeOfCond.w,
+                moment: takeOfCond.m
+        })
+    },[takeOfCond.w])
+
+    useEffect(()=>{
+        setLanding(
+            {...landing,
+                weight: landCond.w,
+                arm: landCond.m / landCond.w,
+                moment: landCond.m }
+        )
+    },[landCond.w])
+    
     
 
     return (
@@ -89,7 +112,7 @@ function InputTable() {
                             setValues((prev)=>({...prev, emptyW: +e.target.value, emptyM: prev.emptyA * e.target.value}))}/></td>
                         <td className="tg-c3ow"><input type='number' min='0' value={values.emptyA} onClick={handleClick} onChange={(e)=>
                             setValues((prev)=>({...prev, emptyA: +e.target.value, emptyM: prev.emptyW * e.target.value}))}/></td>
-                        <td className="tg-c3ow"><input type='number' min='0' readOnly value={values.emptyM} /></td>
+                        <td className="tg-c3ow"><input type='number' min='0' readOnly value={+values.emptyM.toFixed(2)} /></td>
                     </tr>
                     <tr>
                         <td className="tg-0pky">Pilot 1</td>
@@ -107,7 +130,7 @@ function InputTable() {
                     <tr>
                         <td className="tg-llyw">Basic Condition</td>
                         <td className="tg-34fe">{+basicCond.w.toFixed(2)}</td>
-                        <td className="tg-34fe">{+(basicCond.m / basicCond.w).toFixed(2)}</td>
+                        <td className="tg-34fe">{basicCond.w === 0 ? 0:(basicCond.m / basicCond.w).toFixed(2)}</td>
                         <td className="tg-34fe">{+basicCond.m.toFixed(2)}</td>
                     </tr>
                     <tr>
@@ -127,7 +150,7 @@ function InputTable() {
                     <tr>
                         <td className="tg-llyw">Zero Fuel Condition</td>
                         <td className="tg-34fe">{+noFuelCond.w.toFixed(2)}</td>
-                        <td className="tg-34fe">{+(noFuelCond.m / noFuelCond.w).toFixed(2)}</td>
+                        <td className="tg-34fe">{noFuelCond.w === 0 ? 0:(noFuelCond.m / noFuelCond.w).toFixed(2)}</td>
                         <td className="tg-34fe">{+noFuelCond.m.toFixed(2)}</td>
                     </tr>
                     <tr>
@@ -152,7 +175,7 @@ function InputTable() {
                     <tr>
                         <td className="tg-llyw">Ramp Condition</td>
                         <td className="tg-34fe">{+rampCond.w.toFixed(2)}</td>
-                        <td className="tg-34fe">{+(rampCond.m / rampCond.w).toFixed(2)}</td>
+                        <td className="tg-34fe">{rampCond.w === 0 ? 0:(rampCond.m / rampCond.w).toFixed(2)}</td>
                         <td className="tg-34fe">{+rampCond.m.toFixed(2)}</td>
                     </tr>
                     <tr>
@@ -176,9 +199,9 @@ function InputTable() {
                     </tr>
                     <tr className='to-cond'>
                         <td className="tg-llyw">TakeOff Condition</td>
-                        <td className="tg-34fe">{+toCond.w.toFixed(2)}</td>
-                        <td className="tg-34fe">{+(toCond.m / toCond.m).toFixed(2)}</td>
-                        <td className="tg-34fe">{+toCond.m.toFixed(2)}</td>
+                        <td className="tg-34fe">{+takeOfCond.w.toFixed(2)}</td>
+                        <td className="tg-34fe">{takeOfCond.w === 0 ? 0:(takeOfCond.m / takeOfCond.w).toFixed(2)}</td>
+                        <td className="tg-34fe">{+takeOfCond.m.toFixed(2)}</td>
                     </tr>
                     <tr>
                         <td className="tg-0pky">Fuel Burned During Flight(-)</td>
@@ -202,7 +225,7 @@ function InputTable() {
                     <tr className='landing-cond'>
                         <td className="tg-llyw">Landing Condition</td>
                         <td className="tg-34fe">{+landCond.w.toFixed(2)}</td>
-                        <td className="tg-34fe">{+(landCond.m / landCond.w).toFixed(2)}</td>
+                        <td className="tg-34fe">{landCond.w === 0 ? 0:(landCond.m / landCond.w).toFixed(2)}</td>
                         <td className="tg-34fe">{+landCond.m.toFixed(2)}</td>
                     </tr>
                 </tbody>
@@ -212,4 +235,10 @@ function InputTable() {
 }
 
 export default InputTable
+
+
+
+//Put mesurment units in table legend.
+//Check how to avoid usage of multiple toFixed.
+
 
