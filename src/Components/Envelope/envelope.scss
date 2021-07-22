@@ -2,5 +2,49 @@
 .envelopes {
     display: flex;
     justify-content: center;
+    // background-image: url('https://miro.medium.com/max/629/1*rzNBRBt1RCr4NsN4Lb7V1Q.png');
+
     
+}
+
+.imgs {
+    display: flex;
+    justify-content: center;
+
+
+
+    .arm-chart {
+        position: relative;
+        cursor: pointer;
+        width: 700px;
+        height: 400px;
+        background-image: url('https://i.ibb.co/qRWYJzK/arm.jpg');
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    .aDot {
+        position: absolute;
+        cursor: pointer;
+        width: 7px;
+        bottom: 37px;
+        left: 60px;
+
+    }
+
+    .moment-chart {
+        position: relative;
+        cursor: pointer;
+        width: 700px;
+        height: 400px;
+        background-image: url('https://i.ibb.co/yh3HdWy/moment.jpg');
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    .mDot {
+        position: absolute;
+        cursor: pointer;
+        width: 7px;
+        bottom: 35px;
+        left: 68px;
+    }
 }

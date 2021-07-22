@@ -240,5 +240,6 @@ export default InputTable
 
 //Put mesurment units in table legend.
 //Check how to avoid usage of multiple toFixed.
+//Ubaci sliku envelopa samo za sad
 
 
