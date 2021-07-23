@@ -24,11 +24,15 @@
         display: flex;
         justify-content: space-around;
 
-        input,div {
-            margin-right: 10px;
-        }
+        // input,div {
+        //     margin-right: 10px;
+        // }
         input {
             width: 50px;
+        }
+        div {
+            margin-left: 0;
+            margin-right: 10px;
         }
         
         

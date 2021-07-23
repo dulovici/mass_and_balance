@@ -100,7 +100,7 @@ function InputTable({takeOff, landing, setTakeOff, setLanding}) {
                 <thead>
                     <tr>
                         <th className="tg-2yfi">ITEM</th>
-                        <th className="tg-2yfi">WEIGHT</th>
+                        <th className="tg-2yfi">WEIGHT (lbs)</th>
                         <th className="tg-2yfi">ARM</th>
                         <th className="tg-2yfi">MOMENT</th>
                     </tr>
@@ -164,9 +164,9 @@ function InputTable({takeOff, landing, setTakeOff, setLanding}) {
                                     setValues((prev)=>({...prev,
                                         rampM: prev.rampW * prev.rampA}))}
                                 }/>
-                            <div>x</div>
+                            <div>gal. *</div>
                             <input type='number' min='0'  value = {values.rRate} />
-                            <div>=</div>
+                            <div style={{marginLeft: '10px'}}>=</div>
                             <input type='number' min='0'  value={values.rampW}/>
                         </td>
                         <td className="tg-c3ow"><input type='number' min='0'  value = {values.rampA}/></td>
@@ -189,9 +189,9 @@ function InputTable({takeOff, landing, setTakeOff, setLanding}) {
                             setValues((prev)=>({...prev,
                                 groundM: prev.groundW * prev.groundA}))}
                         }/>
-                            <div>x</div>
+                            <div>gal. *</div>
                             <input type='number' min='0' value = {values.gRate}/>
-                            <div>=</div>
+                            <div style={{marginLeft: '10px'}}>=</div>
                             <input type='number' min='0' value={values.groundW}/>
                         </td>
                         <td className="tg-c3ow"><input type='number' min='0' value = {values.groundA}/></td>
@@ -214,9 +214,9 @@ function InputTable({takeOff, landing, setTakeOff, setLanding}) {
                             setValues((prev)=>({...prev,
                                 burnedM: prev.burnedW * prev.burnedA}))}
                         }/>
-                            <div>x</div>
+                            <div>gal. *</div>
                             <input type='number' min='0' value = {values.bRate}/>
-                            <div>=</div>
+                            <div style={{marginLeft: '10px'}}>=</div>
                             <input type='number' min='0' value={values.burnedW}/>
                         </td>
                         <td className="tg-c3ow"><input type='number' min='0' value = {values.burnedA}/></td>
@@ -238,8 +238,6 @@ export default InputTable
 
 
 
-//Put mesurment units in table legend.
-//Check how to avoid usage of multiple toFixed.
-//Ubaci sliku envelopa samo za sad
+
 
 
