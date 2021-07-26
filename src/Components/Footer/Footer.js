@@ -4,7 +4,7 @@ import './footer.scss';
 function Footer() {
     return (
         <div className='footer'>
-            <p>Developed by Tanka Svirka. 2021</p>
+            <p>Developed by Tanka Svirka, 2021</p>
         </div>
     )
 }
